@@ -1,0 +1,32 @@
+.footer {
+  background-color: white;
+  color: black;
+  padding: 25px 0;
+  text-align: center;
+  margin-top: auto;
+  border-top: 2px solid #667eea;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer p {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.github-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  margin-left: 8px;
+  transition: color 0.2s ease;
+}
+
+.github-link:hover {
+  color: #2980b9;
+  text-decoration: underline;
+}
