@@ -3,7 +3,10 @@ import CountryCard from './CountryCard';
 import CountryDetail from './CountryDetail';
 import Home from './Home';
 import { useCountriesData } from '../hooks/useCountriesData';
+import { Globe } from 'lucide-react';
 import Footer from "./Footer";
+import SearchFilters from './SearchFilters';
+import ContactView from './ContactView';
 import '../css/base.css';
 import '../css/components.css';
 import '../css/home.css';
@@ -98,13 +101,14 @@ ${formData.message}
     <nav className="navbar">
       <div className="nav-container">
         <div className="nav-header">
-          <h1 
-            className="nav-title" 
-            onClick={() => handleNavClick('home')}
+          <div 
+            className="nav-brand" 
+            onClick={() => handleNavClick('home')} 
             style={{ cursor: 'pointer' }}
           >
-            Countries Explorer
-          </h1>
+            <Globe className="nav-logo" />
+            <h1 className="nav-title">Countries Explorer</h1>
+          </div>
           
           <div className={`nav-toggle ${mobileMenuOpen ? 'open' : ''}`} onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
             <div className="bar"></div>
@@ -204,51 +208,19 @@ ${formData.message}
     </nav>
   );
 
-  const SearchFilters = () => (
-    <div className="filters">
-      <input
-        type="text"
-        placeholder="Buscar países..."
-        value={searchInput}
-        onChange={e => setSearchInput(e.target.value)}
-        onKeyDown={e => {
-          if (e.key === 'Enter') {
-            setSearchTerm(searchInput);
-          }
-        }}
-      />
-      <select 
-        value={regionFilter} 
-        onChange={e => setRegionFilter(e.target.value)}
-      >
-        <option value="">Todas las regiones</option>
-        <option value="Africa">África</option>
-        <option value="Americas">América</option>
-        <option value="Asia">Asia</option>
-        <option value="Europe">Europa</option>
-        <option value="Oceania">Oceanía</option>
-      </select>
-      <select 
-        value={populationFilter} 
-        onChange={e => setPopulationFilter(e.target.value)}
-      >
-        <option value="">Toda población</option>
-        <option value="small">Menos de 1M</option>
-        <option value="medium">1M - 50M</option>
-        <option value="large">Más de 50M</option>
-      </select>
-      <input 
-        type="text" 
-        placeholder="Filtrar por idioma..." 
-        value={languageFilter} 
-        onChange={e => setLanguageFilter(e.target.value)}
-      />
-    </div>
-  );
-
   const SearchView = () => (
     <div className="main">
-      <SearchFilters />
+      <SearchFilters 
+        searchInput={searchInput}
+        setSearchInput={setSearchInput}
+        setSearchTerm={setSearchTerm}
+        regionFilter={regionFilter}
+        setRegionFilter={setRegionFilter}
+        populationFilter={populationFilter}
+        setPopulationFilter={setPopulationFilter}
+        languageFilter={languageFilter}
+        setLanguageFilter={setLanguageFilter}
+      />
       {loading ? (
         <div className="loading">Cargando países...</div>
       ) : (
@@ -278,7 +250,7 @@ ${formData.message}
               disabled={currentPage === totalPages} 
               onClick={() => setCurrentPage(p => p + 1)}
             >
-               →
+               → 
             </button>
           </div>
         </>
@@ -367,6 +339,37 @@ ${formData.message}
       emailTo: '', 
       message: `¡Hola! Te quiero compartir información sobre ${shareData?.name.common}. Es un país fascinante que vale la pena conocer.` 
     });
+    const [errors, setErrors] = useState({});
+
+    const validate = () => {
+      const newErrors = {};
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!formData.emailFrom) {
+        newErrors.emailFrom = "Tu email es obligatorio";
+      } else if (!emailRegex.test(formData.emailFrom)) {
+        newErrors.emailFrom = "Formato de email inválido";
+      }
+
+      if (!formData.emailTo) {
+        newErrors.emailTo = "El email de destino es obligatorio";
+      } else if (!emailRegex.test(formData.emailTo)) {
+        newErrors.emailTo = "Formato de email inválido";
+      }
+
+      if (!formData.message || formData.message.trim().length < 5) {
+        newErrors.message = "El mensaje debe tener al menos 5 caracteres";
+      }
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    };
+
+    const handleSubmit = () => {
+      if (validate()) {
+        handleShare(formData);
+      }
+    };
 
     return (
       <div className="main">
@@ -376,41 +379,36 @@ ${formData.message}
             <label>Tu email:</label>
             <input 
               type="email" 
-              placeholder="tu@email.com" 
               value={formData.emailFrom} 
               onChange={e => setFormData({ ...formData, emailFrom: e.target.value })}
             />
+            {errors.emailFrom && <span className="error">{errors.emailFrom}</span>}
           </div>
           
           <div className="form-group">
             <label>Email destino:</label>
             <input 
               type="email" 
-              placeholder="destino@email.com" 
               value={formData.emailTo} 
               onChange={e => setFormData({ ...formData, emailTo: e.target.value })}
             />
+            {errors.emailTo && <span className="error">{errors.emailTo}</span>}
           </div>
           
           <div className="form-group">
             <label>Mensaje personal:</label>
             <textarea 
-              placeholder="Escribe tu mensaje aquí..." 
               value={formData.message} 
               onChange={e => setFormData({ ...formData, message: e.target.value })}
               rows={4}
             />
+            {errors.message && <span className="error">{errors.message}</span>}
           </div>
           
           <div className="form-actions">
+            <button onClick={handleSubmit}>Enviar email</button>
             <button 
-              onClick={() => handleShare(formData)}
-              disabled={!formData.emailTo}
-            >
-              Enviar email
-            </button>
-            <button 
-              onClick={() => setActiveView('detail')}
+              onClick={() => setActiveView('search')}
               className="btn-secondary"
             >
               Cancelar
@@ -421,31 +419,10 @@ ${formData.message}
     );
   };
 
-  const ContactView = () => (
-    <div className="main">
-      <h2>Información de Contacto</h2>
-      <div className="contact-info">
-        <div className="contact-section">
-          <h3>Countries Explorer</h3>
-          <p><strong>Email:</strong> info@countriesexplorer.com</p>
-          <p><strong>Teléfono:</strong> +54 221 1234567</p>
-          <p><strong>Ubicación:</strong> Catedral de La Plata (-34.9214, -57.9544)</p>
-        </div>
-        
-        <div className="contact-footer">
-          <h4>¡Gracias por usar Countries Explorer!</h4>
-          <p>Una aplicación para descubrir y explorar países de todo el mundo</p>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <div className="app-container">
-      {/* Solo mostrar Navigation cuando no estemos en home */}
       {activeView !== 'home' && <Navigation />}
       
-      {/* Renderizar vistas */}
       {activeView === 'home' && <Home onStartExploration={handleStartExploration} />}
       {activeView === 'search' && <SearchView />}
       {activeView === 'detail' && selectedCountry && (

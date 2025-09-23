@@ -188,6 +188,7 @@ export const useCountriesData = () => {
     languageFilter,
     currentPage,
     loading,
+    allCountries: countries,
     
     setSearchTerm,
     setSearchInput,

@@ -9,7 +9,7 @@
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1000;
+  z-index: 500;
   background: var(--bg-glass);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.3);
@@ -78,6 +78,7 @@
   align-items: center;
   justify-content: center;
   padding: var(--spacing-lg);
+  padding-top: 120px;
   position: relative;
   overflow: hidden;
 }
@@ -197,7 +198,6 @@
   height: 1.25rem;
 }
 
-/* Stats Grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
@@ -243,7 +243,6 @@
   color: var(--text-secondary);
 }
 
-/* Features Section */
 .features-section {
   padding: 5rem var(--spacing-lg);
   background: rgba(255, 255, 255, 0.5);
@@ -432,6 +431,10 @@
 }
 
 @media (max-width: 768px) {
+  .home-nav {
+    z-index: 400;
+  }
+  
   .nav-content {
     padding: 0 var(--spacing-sm);
   }
@@ -443,6 +446,7 @@
   
   .hero-section {
     padding: var(--spacing-sm);
+    padding-top: 140px;
   }
   
   .hero-actions {
@@ -474,18 +478,22 @@
 
 @media (max-width: 480px) {
   .nav-brand {
-    flex-direction: column;
-    gap: 0;
-    align-items: flex-start;
+    display: flex;
+    flex-direction: row !important;
+    align-items: center;
+    gap: var(--spacing-xs);
+    flex-shrink: 0;
   }
   
   .nav-title {
     font-size: var(--font-base);
+    white-space: nowrap;
   }
   
   .nav-cta-btn {
     padding: 0.5rem var(--spacing-xs);
     font-size: var(--font-sm);
+    flex-shrink: 1;
   }
   
   .stats-grid {
@@ -494,5 +502,10 @@
   
   .hero-title {
     font-size: 2rem;
+  }
+  
+  .nav-content {
+    padding: 0 var(--spacing-xs);
+    gap: var(--spacing-xs);
   }
 }

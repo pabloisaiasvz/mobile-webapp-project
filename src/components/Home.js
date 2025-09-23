@@ -26,6 +26,16 @@ const Home = ({ onStartExploration }) => {
       icon: <Clock className="feature-icon" />,
       title: "Historial",
       description: "Revisa todos los países que has explorado anteriormente."
+    },
+    {
+      icon: <MapPin className="feature-icon" />,
+      title: "Mapa Interactivo",
+      description: "Explora mapas interactivos de cada país para conocer su geografía y ubicaciones clave."
+    },
+    {
+      icon: <Users className="feature-icon" />,
+      title: "Comparte con Amigos",
+      description: "Envía y comparte países descubiertos con tus amigos para explorar juntos."
     }
   ];
 
@@ -148,8 +158,7 @@ const Home = ({ onStartExploration }) => {
           </p>
           
           <button className="cta-button" onClick={handleStartExploration}>
-            <Globe className="cta-icon" />
-            Comenzar Exploración Ahora
+            ¡Comenzar a explorar!
           </button>
         </div>
       </section>
@@ -167,7 +176,7 @@ const Home = ({ onStartExploration }) => {
           </div>
           
           <div className="footer-copyright">
-            <p>© 2025 Countries Explorer. Una aplicación para descubrir el mundo.</p>
+            <p>By Pablo Velázquez — Una aplicación para descubrir el mundo.</p>
           </div>
         </div>
       </footer>
